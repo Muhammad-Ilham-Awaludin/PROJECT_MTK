@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Bunga</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .big-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 40rem;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        h1 {
+            color: #0066cc;
+            margin-bottom: 1rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 70vh;
+        }
+
+        label {
+            text-align: left;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            padding: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #0066cc;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #004d99;
+        }
+
+        #hasil {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 400px;
+            margin-left: 10px;
+        }
+
+        #hasil h2 {
+            color: #0066cc;
+        }
+
+        p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+    </style>
+    <script>
+        function hitungBunga() {
+            // Mengambil nilai input dari form
+            const jenis_perhitungan = document.getElementById('jenis_perhitungan').value;
+            const bunga = parseFloat(document.getElementById('bunga').value) / 100;
+            // const periode = document.getElementById('periode').value;
+            let jumlah_periode = parseFloat(document.getElementById('jumlah_periode').value);
+            const uang_awal = parseFloat(document.getElementById('uang_awal').value);
+
+            let hasil = 0;
+
+            // Logika perhitungan
+            if (jenis_perhitungan === "tunggal") {
+                // Rumus Bunga Tunggal: A = P(1 + rt)
+                hasil = uang_awal * (1 + bunga * jumlah_periode);
+            } else if (jenis_perhitungan === "majemuk") {
+                // Rumus Bunga Majemuk: A = P(1 + r)^t
+                hasil = uang_awal * Math.pow((1 + bunga), jumlah_periode);
+            } else if (jenis_perhitungan === "anuitas") {
+                // Rumus Anuitas: A = P * [r(1+r)^t] / [(1+r)^t - 1]
+                if (bunga !== 0) {
+                    hasil = uang_awal * (bunga * Math.pow((1 + bunga), jumlah_periode)) / (Math.pow((1 + bunga), jumlah_periode) - 1);
+                } else {
+                    hasil = uang_awal / jumlah_periode;
+                }
+            }
+
+            // Menampilkan hasil di elemen hasil
+            document.getElementById('hasil').innerHTML = `
+                <h2>Hasil Perhitungan</h2>
+                <p>Jenis Perhitungan: ${jenis_perhitungan.charAt(0).toUpperCase() + jenis_perhitungan.slice(1)}</p>
+                <p>Uang Awal: Rp ${uang_awal.toLocaleString('id-ID', { minimumFractionDigits: 2 })}</p>
+                <p>Bunga: ${(bunga * 100).toFixed()}%</p>
+                <p>Jumlah Periode: ${jumlah_periode.toFixed()} Tahun</p>
+                <p>Uang Akhir: Rp ${hasil.toLocaleString('id-ID', { minimumFractionDigits: 2 })}</p>
+            `;
+        }
+    </script>
+</head>
+<body>
+    <h1>Kalkulator Bunga</h1>
+    <div class="big-container">
+        <div class="container">
+        <form onsubmit="event.preventDefault(); hitungBunga();">
+            <label for="jenis_perhitungan">Jenis Perhitungan :</label>
+            <select id="jenis_perhitungan" name="jenis_perhitungan">
+                <option value="tunggal">Bunga Tunggal</option>
+                <option value="majemuk">Bunga Majemuk</option>
+                <option value="anuitas">Anuitas</option>
+            </select>
+            <br>
+
+            <label for="bunga">Bunga (dalam %) :</label>
+            <input type="number" id="bunga" name="bunga" step="0.01" required>
+            <br>
+
+            <label for="jumlah_periode">Jumlah Periode/tahun :</label>
+            <input type="number" id="jumlah_periode" name="jumlah_periode" required>
+            <br>
+
+            <label for="uang_awal">Modal Awal (Rp) :</label>
+            <input type="number" id="uang_awal" name="uang_awal" required>
+            <br>
+
+            <button type="submit">Hitung</button>
+        </form>
+        <div id="hasil"></div>
+
+    </div>
+</div>
+
+</body>
+</html>
